@@ -1,0 +1,300 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -560,
+        -64
+      ],
+      "id": "edd5a4c4-34f9-4953-8d79-faa6e95ffeb4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "filters": {
+          "labelIds": [
+            "UNREAD"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        -48
+      ],
+      "id": "e7bb4b08-57e3-440c-81c4-cb269698f7a7",
+      "name": "Get many messages",
+      "webhookId": "597e0d0c-fec0-41fb-afac-5956f34119a7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1WWgKrk9r8f71R0L",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.threadId }}",
+        "simple": false,
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        -64
+      ],
+      "id": "cf0dd56e-9e22-46fc-b5c8-1cc0db0a6be4",
+      "name": "Get a message",
+      "webhookId": "58963d18-0f9f-4a76-a0db-f50aa3cae8ab",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1WWgKrk9r8f71R0L",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Subject:{{ $json.headers.subject }}\n   \n\nEmail Body:  {{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "<Agentinstructions>\n    <Role>\n        <name> Email Reply Agent </name>\n        <Description> A Helpful email reply Agent </Description>\n        <Role>\n\n\n        <Gola>\n            <primary> Draft custom but very professional email replies which are 100% humanlike. </primary>\n            <secondary> As an email reply agent you should not only reply but also build trust and reputation with the person you are replying too. </secondary>\n        </Gole>\n\n        <instruction>\n            <instruction> Once you receive the email, you should thorouly understand and analyse the subject line and full email body message.\n            <instruction> Ater you read the email, Review <Details> and <Aim> to understand the context of the user before drafting a reply.\n            <instruction> Draft a Professional Reply using <Userinfo>, Use Age where necessary </instruction>\n        </instruction>\n    <Userinfo>\n        <Details>\n            <Detail name = \"User Name\"> Asma  </Detail>\n            <Detail name = \"Company\">  Email Reply Agent </Detail>\n            <Detail name = \"Age\"> 33 </Detail>\n            <Detail name= \"Contact Info\"03006044660 </Detail>\n        </Deails>\n\n        <Aims>\n            <Aim name = \"Mission\"> wants to make AI Agent for people who have less time to do that work. </Aim>\n            <Aim name = \"Focus\"> Right now focusing more on Making more effective Agents who can work in hours not days. </Aim>\n            <Aim name = \"Community focus\"> Focus on Community Right now </Aim>\n        </Aims>\n    </User Info>\n\n    <Examples>\n        <Example> \n            <UserInput>\n            Subject : Security alert\n\n\n            </UserInput>\n\n            <UserOutput>\n                Dear Sir/Madam,\n\n                Thank you for bringing this security alert to our attention. I appreciate you reaching out, as matters related to security and privacy are extremely important to us.\n\n                At the moment, I would like to fully understand the nature of this alert so I can assist you in the most accurate and responsible way. Could you please share a few more details, such as what activity you noticed, when it occurred, and which system or account it is related to?\n\n                At Email Reply Agent, our mission is to support individuals and communities with reliable AI solutions that save time while maintaining trust, transparency, and professionalism. Please be assured that I am taking your message seriously and will prioritize this matter once I receive further information.\n\n                I look forward to your response and am here to help.\n\n                Warm regards,\n                Asma\n\n\n            </UserOutput>\n        </Example>\n            \n        <Example>\n            <Userinput>\n            Subject : Update\n            </UserInput>\n            <UserOutput>\n        \n                Dear Hostinger Team,\n\n                Thank you very much for the warm welcome and for providing the details of my newly created VPS. I’m excited to get started and truly appreciate how clearly everything has been set up.\n\n                I have received the VPS information, including the hostname, IP addresses, and panel access URL, and will be reviewing the environment shortly. I’m particularly looking forward to working with Ubuntu 24.04 and n8n, as my current focus is on building efficient AI agents that can help individuals and communities save valuable time.\n\n                Please let me know if there are any recommended first steps, security measures, or best-practice guides you suggest before deploying workflows. If there are additional resources specifically for optimizing n8n on a VPS, I would be happy to explore them.\n\n                Thank you once again for your support. I look forward to a productive experience with Hostinger.\n\n                Warm regards,\n                Asma\n                Email Reply Agent\n                Contact: 03006044660\n\n\n            </UserOutput>\n        </Example>\n\n        <Example>\n            <UserInput>\n            Subject : you got Rs. 2,000 from Asma Ebad 🎉\n            </UserInput>\n    \n            <UserOutput>\n               Dear Sir/Madam,\n\n                Thank you for the notification. I confirm that I have received the amount of Rs. 2,000 successfully.\n\n                I truly appreciate the update and the smooth transaction process. Please let me know if any further confirmation or action is required from my side.\n\n                Wishing you a great day ahead, and thank you for your support.\n\n                Warm regards,\n                Asma\n                Email Reply Agent\n                Contact: 03006044660\n\n\n            </UserOutput>\n        </Example>\n    \n     </Examples>\n</Agentinstructions>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -64
+      ],
+      "id": "67ae9388-96bf-4bb2-b445-e8f5f9147aaa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        144
+      ],
+      "id": "2d9398df-1a3a-4f90-afc5-f7fd4bd5c7f6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "pbr1GveNjDlyJFqo",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        144
+      ],
+      "id": "86e3147d-0a3a-4735-9058-18e05ba23fd7",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1FrXMy3xIZDSIPCYUzs2tZdvnxTK4zye3gqR_83rH5nc",
+          "mode": "list",
+          "cachedResultName": "Email Reply Agent",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FrXMy3xIZDSIPCYUzs2tZdvnxTK4zye3gqR_83rH5nc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FrXMy3xIZDSIPCYUzs2tZdvnxTK4zye3gqR_83rH5nc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Name": "={{ $('Get a message').item.json.from.value[0].name }}",
+            "From Email": "={{ $('Get a message').item.json.from }}",
+            "Email Body": "={{ $('Get a message').item.json.text }}",
+            "Body Draft Reply": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "Sender Name"
+          ],
+          "schema": [
+            {
+              "id": "Sender Name",
+              "displayName": "Sender Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "From Email",
+              "displayName": "From Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Body Draft Reply",
+              "displayName": "Body Draft Reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "f1ffdad4-5b41-44c7-80b8-2bce554a056c",
+      "name": "Append or update row in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "tiGNcwniR7UtWXgg",
+          "name": "Google Sheets account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "418610a6-d62a-4ee0-82a7-fa6255ee8813",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "920a17f7446019663402b96f8ecdd261cc50d522bf4eedfb828ba6fe292a7472"
+  },
+  "id": "Ngp2tOav349rXX55PI_LX",
+  "tags": []
+}
